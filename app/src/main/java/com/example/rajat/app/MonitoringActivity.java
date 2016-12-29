@@ -1,8 +1,5 @@
 package com.example.rajat.app;
 
-/**
- * Created by komorebi on 12/29/16.
- */
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -13,24 +10,69 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.altbeacon.beacon.BeaconManager;
 import org.w3c.dom.Text;
+
+import java.util.Arrays;
 
 public class MonitoringActivity extends Activity  {
     protected static final String TAG = "MonitoringActivity";
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+    private static final int RC_SIGN_IN = 1;
 
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mUsersDatabaseReference;
+    private ChildEventListener mChildEventListener;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitoring);
+
+        mUsersDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user != null){
+                    onSignedInInitialize(user.getDisplayName());
+                }
+                else{
+                    onSignedOutCleanUp();
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+
+
+        };
+
+
         verifyBluetooth();
         logToDisplay("Application just launched");
 
@@ -54,6 +96,13 @@ public class MonitoringActivity extends Activity  {
                 builder.show();
             }
         }
+    }
+
+    private void onSignedOutCleanUp() {
+    }
+
+    private void onSignedInInitialize(String displayName) {
+
     }
 
     @Override
@@ -91,11 +140,15 @@ public class MonitoringActivity extends Activity  {
     public void onResume() {
         super.onResume();
         ((MainActivity) this.getApplicationContext()).setMonitoringActivity(this);
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (mAuthStateListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
         ((MainActivity) this.getApplicationContext()).setMonitoringActivity(null);
     }
 

@@ -1,8 +1,5 @@
 package com.example.rajat.app;
 
-/**
- * Created by komorebi on 12/29/16.
- */
 import java.util.Collection;
 
 import android.app.Activity;
