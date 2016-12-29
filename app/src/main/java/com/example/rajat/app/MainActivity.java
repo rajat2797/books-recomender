@@ -10,6 +10,11 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Region;
@@ -17,16 +22,12 @@ import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 import org.altbeacon.beacon.startup.RegionBootstrap;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 
-/**
- * Created by dyoung on 12/13/13.
- */
 public class MainActivity extends Application implements BootstrapNotifier {
     private static final String TAG = "BeaconReferenceApp";
     private RegionBootstrap regionBootstrap;
     private BackgroundPowerSaver backgroundPowerSaver;
     private boolean haveDetectedBeaconsSinceBoot = false;
     private MonitoringActivity monitoringActivity = null;
-
 
     public void onCreate() {
         super.onCreate();
@@ -45,8 +46,7 @@ public class MainActivity extends Application implements BootstrapNotifier {
 
         Log.d(TAG, "setting up background monitoring for beacons and power saving");
         // wake up the app when a beacon is seen
-        Region region = new Region("backgroundRegion",
-                null, null, null);
+        Region region = new Region("backgroundRegion", null, null, null);
         regionBootstrap = new RegionBootstrap(this, region);
 
         // simply constructing this class and holding a reference to it in your custom Application
