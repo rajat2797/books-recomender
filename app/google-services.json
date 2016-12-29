@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "175616341567",
+    "firebase_url": "https://books-recomender-451a9.firebaseio.com",
+    "project_id": "books-recomender-451a9",
+    "storage_bucket": "books-recomender-451a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175616341567:android:d638efa11da8d630",
+        "android_client_info": {
+          "package_name": "com.example.rajat.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175616341567-5ugv0ojvjtebee86o2raqbcv9a7fg9u2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rajat.app",
+            "certificate_hash": "EDBB0C0629C8977B0ED1D1CCADED93073748A8B5"
+          }
+        },
+        {
+          "client_id": "175616341567-7gk37oerq7e4e8eaahq77uf2eofbt2pb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfhiJknslAgLYE2G17gRUWjHkzdvY-dRU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175616341567-7gk37oerq7e4e8eaahq77uf2eofbt2pb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
